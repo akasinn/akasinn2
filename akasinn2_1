@@ -1,0 +1,49 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+//ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー 
+/*アルキル基の構造異性体の数を求める。
+鏡像異性体や立体障害は考慮しない*/
+// -CnH₂ₙ₊₁
+vector<int> Ag;//Alkyl group
+void make_Ag(int N){
+  Ag.resize(N+1);
+  Ag.at(0)=1;
+  for(int n=1;n<=N;n++){
+    // CᵢH₂ᵢ₊₁
+    // |
+    //-C-CⱼH₂ⱼ₊₁
+    // |
+    // CₖH₂ₖ₊₁
+    //0≦i≦j≦k≦n
+    int ans=0;
+    for(int i=0;i<=n/3;i++){
+      for(int j=i;j<n;j++){
+        int k=n-1-i-j;
+        if(k<j)break;
+        if(i==k){
+          int a=Ag.at(i);
+          ans+=a*(a+1)*(a+2)/6;//a+ₐP₂+ₐC₃
+        }else if(i==j || j==k){
+          int a=Ag.at(i^j^k),aa=Ag.at(j);
+          ans+=a*aa*(aa+1)/2;//a(aa+ₐₐC₂)
+        }else{
+          ans+=Ag.at(i)*Ag.at(j)*Ag.at(k);
+        }
+      }
+    }
+    Ag.at(n)=ans;
+  }
+  return;
+}
+
+
+
+
+//ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー 
+int main(){
+  int n; cin>>n;
+  make_Ag(n);
+  cout<<Ag.at(n);
+  return 0;
+}
